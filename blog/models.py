@@ -22,6 +22,7 @@ class Article(models.Model):
 	like = models.IntegerField(default=0)
 	published = models.DateTimeField(auto_now=True)
 	status = models.BooleanField(default=True)
+	views = models.IntegerField(default=0)
 
 	def date(self):
 		return self.published.date()

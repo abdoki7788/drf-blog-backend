@@ -25,6 +25,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
 		article.like -= 1
 		article.save()
 		return Response(Article.objects.get(id=pk).like)
+	
+	def retrieve(self, request, *args, **kwargs):
+		obj = self.get_object()
+		obj.views += 1
+		obj.save()
+		return Response(ArticleSerialize(obj).data)
+
 
 class TagViewSets(viewsets.ModelViewSet):
 	queryset = Tag.objects.all()
