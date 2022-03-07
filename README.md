@@ -10,7 +10,7 @@ for install python in windows, go to https://www.python.org/ and download python
 
 next run this command for install virtualenv
 
-``` pip install vertualenv ```
+``` pip install virtualenv ```
 
 for clone this project run this command
 ``` git clone https://github.com/abdoki7788/react-blog-backend.git 
