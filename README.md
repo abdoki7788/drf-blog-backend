@@ -17,18 +17,21 @@ for clone this project run this command
 cd react-blog-backend
 ```
 
-then run this command to create a virtual envirement
-``` virtualenv .venv```
-
-and activate this envirement
+create a virtual envirement and activate
 
 ### linux
 
-``` source .venv/bin/activate ```
+```
+virtualenv .venv
+source .venv/bin/activate
+```
 
 ### windows
 
-``` .venv/scripts/activate.bat ```
+```
+python -m virtualenv .venv
+.venv\scripts\activate.bat
+```
 
 then install dependencie packages from requirements.txt using this command:
 
