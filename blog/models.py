@@ -4,13 +4,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 # Create your models here.
 
-class Category(models.Model):
-	name = models.CharField(max_length=50, unique=True)
-	slug = models.SlugField(unique=True)
-
-	def __str__(self):
-		return self.name
-
 
 class Tag(models.Model):
 	name = models.CharField(max_length=50, unique=True)
@@ -25,7 +18,6 @@ class Article(models.Model):
 	image = models.ImageField(upload_to="images", null=True)
 	content = models.TextField()
 	author = models.ForeignKey(User, related_name='articles', on_delete=models.CASCADE)
-	category = models.ForeignKey(Category, null=True, related_name='articles', on_delete=models.SET_NULL)
 	tags = models.ManyToManyField(Tag, blank=True, related_name='articles')
 	like = models.IntegerField(default=0)
 	published = models.DateTimeField(auto_now=True)

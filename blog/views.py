@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Article, Category, Tag
-from .serializers import ArticleSerialize, CategorySerialize, TagSerializer
+from .models import Article, Tag
+from .serializers import ArticleSerialize, TagSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -24,10 +24,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
 		article.like -= 1
 		article.save()
 		return Response(Article.objects.get(id=pk).like)
-
-class CategoryViewSet(viewsets.ModelViewSet):
-	queryset = Category.objects.all()
-	serializer_class = CategorySerialize
 
 class TagViewSets(viewsets.ModelViewSet):
 	queryset = Tag.objects.all()
