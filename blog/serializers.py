@@ -5,15 +5,13 @@ class ArticleSerialize(serializers.ModelSerializer):
 	class Meta:
 		model = Article
 		fields = '__all__'
-	publish_date = serializers.DateField(source='date', read_only=True)
 
 
 
 class CategorySerialize(serializers.ModelSerializer):
 	class Meta:
 		model = Category
-		fields = ('id', 'name', 'articles')
-
+		fields = '__all__'
 
 class TagSerializer(serializers.ModelSerializer):
 	class Meta:
