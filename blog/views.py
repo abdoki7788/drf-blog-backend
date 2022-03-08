@@ -4,14 +4,19 @@ from .serializers import ArticleSerialize, TagSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import pagination
 import requests
 # Create your views here.
 
+class ArticlePagination(pagination.PageNumberPagination):
+	page_size = 16
+	page_size_query_param = 'page_size'
 
 class ArticleViewSet(viewsets.ModelViewSet):
 	queryset = Article.objects.all()
 	serializer_class = ArticleSerialize
 	filterset_fields = ['status', 'author__username', 'published', 'tags__slug', 'tags']
+	pagination_class = ArticlePagination
 	@action(methods=['post'], detail=True)
 	def like(self,request,pk):
 		article = self.get_object()
