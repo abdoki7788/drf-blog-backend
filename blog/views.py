@@ -43,11 +43,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	def add_view(self, request, *args, **kwargs):
 		obj = self.get_object()
 		req_ip = request.META['REMOTE_ADDR']
-		if not obj.hits.filter(ip=request.META['REMOTE_ADDR']):
+		if not IPAddress.objects.filter(ip=req_ip):
 			ip_obj = IPAddress(ip=req_ip)
 			ip_obj.save()
+		else:
+			ip_obj = IPAddress.objects.filter(ip=req_ip)[0]
+		if not obj.hits.filter(ip=req_ip):
 			obj.hits.add(ip_obj)
-		return Response(obj.hits.all().values())
+		return Response({'hits':obj.hits.count()})
 
 
 class TagViewSets(viewsets.ModelViewSet):

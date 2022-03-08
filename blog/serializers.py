@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Article, Tag
 
 class ArticleSerialize(serializers.ModelSerializer):
+	hits = serializers.IntegerField(source='hits.count', read_only=True)
 	class Meta:
 		model = Article
 		fields = '__all__'
