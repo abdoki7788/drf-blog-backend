@@ -39,11 +39,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
 		article.save()
 		return Response(Article.objects.get(id=pk).like)
 	
-	def retrieve(self, request, *args, **kwargs):
+	@action(methods=['post'], detail=True)
+	def add_view(self, request, *args, **kwargs):
 		obj = self.get_object()
 		obj.views += 1
 		obj.save()
-		return Response(ArticleSerialize(obj).data)
+		return Response(obj.views)
 
 
 class TagViewSets(viewsets.ModelViewSet):
