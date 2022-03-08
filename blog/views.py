@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .models import Article, Tag
+from .models import Article, Tag, IPAddress
 from .serializers import ArticleSerialize, TagSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -42,9 +42,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	@action(methods=['post'], detail=True)
 	def add_view(self, request, *args, **kwargs):
 		obj = self.get_object()
-		obj.views += 1
-		obj.save()
-		return Response(obj.views)
+		req_ip = request.META['REMOTE_ADDR']
+		if not obj.hits.filter(ip=request.META['REMOTE_ADDR']):
+			ip_obj = IPAddress(ip=req_ip)
+			ip_obj.save()
+			obj.hits.add(ip_obj)
+		return Response(obj.hits.all().values())
 
 
 class TagViewSets(viewsets.ModelViewSet):

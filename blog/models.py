@@ -11,6 +11,11 @@ class Tag(models.Model):
 	def __str__(self):
 		return self.name
 
+class IPAddress(models.Model):
+	ip =  models.GenericIPAddressField(unique=True)
+
+	def __str__(self):
+		return self.ip
 
 class Article(models.Model):
 	title = models.CharField(max_length=250)
@@ -22,7 +27,7 @@ class Article(models.Model):
 	like = models.IntegerField(default=0)
 	published = models.DateTimeField(auto_now=True)
 	status = models.BooleanField(default=True)
-	views = models.IntegerField(default=0)
+	hits = models.ManyToManyField(IPAddress, blank=True)
 
 	def date(self):
 		return self.published.date()
