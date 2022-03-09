@@ -1,3 +1,4 @@
+from operator import truediv
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework.response import Response
 
@@ -13,3 +14,9 @@ class IsSuperuser(BasePermission):
 		return request.user.is_superuser
 	def has_permission(self, request):
 		return request.user.is_superuser
+
+class EveryOne(BasePermission):
+	def has_object_permission(self, request, view, obj):
+		return True
+	def has_permission(self, request, view):
+		return True

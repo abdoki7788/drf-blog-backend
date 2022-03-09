@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import pagination
-from .permissions import IsAuthorOrSuperuserElseReadOnly
+from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 import requests
 # Create your views here.
 
@@ -26,7 +26,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	serializer_class = ArticleSerialize
 	filterset_fields = ['status', 'author__username', 'published', 'tags__slug', 'tags']
 	pagination_class = ArticlePagination
-	permission_classes = [IsAuthorOrSuperuserElseReadOnly]
+	def get_permissions(self):
+		if self.action in ['like', 'dislike', 'add_view']:
+			permission_classes = [EveryOne]
+		else:
+			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
+		return [permission() for permission in permission_classes]
 	@action(methods=['post'], detail=True)
 	def like(self,request,pk):
 		article = self.get_object()
