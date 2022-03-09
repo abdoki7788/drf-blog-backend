@@ -67,7 +67,7 @@ class TagViewSets(viewsets.ModelViewSet):
 	serializer_class = TagSerializer
 	@action(methods=['get'], detail=True)
 	def articles(self, request, pk):
-		base_link = reverse('article-list')+f'?tags{pk}'
+		base_link = reverse('article-list')+f'?tags={pk}'
 		if request.query_params.get('page_size'):
 			base_link += f'&page_size={request.query_params.get("page_size")}'
 		if request.query_params.get('page'):
