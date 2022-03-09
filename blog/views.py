@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 import requests
 # Create your views here.
 
@@ -63,6 +65,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
 class TagViewSets(viewsets.ModelViewSet):
 	queryset = Tag.objects.all()
 	serializer_class = TagSerializer
+	@action(methods=['get'], detail=True)
+	def articles(self, request, pk):
+		base_link = reverse('article-list')+f'?tags{pk}'
+		if request.query_params.get('page_size'):
+			base_link += f'&page_size={request.query_params.get("page_size")}'
+		if request.query_params.get('page'):
+			base_link += f'&page={request.query_params.get("page")}'
+		return HttpResponseRedirect(redirect_to=base_link)
 
 
 
