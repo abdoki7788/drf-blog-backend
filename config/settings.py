@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 	'djoser',
 	'drf_yasg',
 	'blog.apps.BlogConfig',
+	'users',
 ]
 
 MIDDLEWARE = [
@@ -137,7 +138,6 @@ REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 		'rest_framework.authentication.TokenAuthentication',
 	),
-	'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 }
 
 DJOSER = {
@@ -154,3 +154,5 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'ad.kiany.2009@gmail.com'
 EMAIL_HOST_PASSWORD = 'abdolrahman'
+
+AUTH_USER_MODEL = 'users.CustomUser'
