@@ -6,6 +6,6 @@ from .managers import UserManager
 # Create your models here.
 
 class CustomUser(AbstractUser):
-	profile = models.ImageField(default='images/logo.png')
-	followers = models.ManyToManyField("self", blank=True)
+	profile = models.ImageField(default='images/logo.png', null=True)
+	followers = models.ManyToManyField("CustomUser", blank=True, related_name='followings')
 	objects = UserManager()

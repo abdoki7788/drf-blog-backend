@@ -1,8 +1,18 @@
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from djoser.views import UserViewSet
 
 # Create your views here.
+
+class CustomUserViewSet(UserViewSet):
+	@action(methods=['get'], detail=True)
+	def follow(self, request, id):
+		to_follow_user = self.get_object()
+		follower_user = request.user
+		to_follow_user.followers.add(follower_user)
+		return Response('followed successfuly')
 
 class UserActivationView(APIView):
 	def get(self, request, uid, token):
