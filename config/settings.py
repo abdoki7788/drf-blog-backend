@@ -162,5 +162,5 @@ EMAIL_HOST_PASSWORD = 'abdolrahman'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-ALLOWED_HOSTS = ['http://localhost:3000', 'http://localhost:8080', 'http://localhost:8000', '127.0.0.1']
-CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8080', 'http://localhost:8000')
+ALLOWED_HOSTS=['*']
+CORS_ORIGIN_ALLOW_ALL = True
