@@ -145,7 +145,10 @@ DJOSER = {
 	'USERNAME_RESET_CONFIRM_URL': 'api/auth/users/username/reset/confirm/{uid}/{token}',
 	'ACTIVATION_URL': 'api/auth/users/activate/{uid}/{token}',
 	'SEND_ACTIVATION_EMAIL': True,
-	'SERIALIZERS': {},
+	'SERIALIZERS': {
+		'current_user': 'users.serializers.CustomUserSerializer',
+		'user': 'users.serializers.CustomUserSerializer',
+	},
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
