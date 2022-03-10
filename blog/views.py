@@ -1,14 +1,12 @@
 from rest_framework import viewsets
 from .models import Article, Tag, IPAddress
-from .serializers import ArticleSerialize, TagSerializer
+from .serializers import ArticleSerialize, TagSerializer, ArticleCreateSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-import requests
 # Create your views here.
 
 class ArticlePagination(PageNumberPagination):
@@ -25,9 +23,14 @@ class ArticlePagination(PageNumberPagination):
 
 class ArticleViewSet(viewsets.ModelViewSet):
 	queryset = Article.objects.all()
-	serializer_class = ArticleSerialize
 	filterset_fields = ['status', 'author__username', 'published', 'tags__slug', 'tags']
 	pagination_class = ArticlePagination
+	def get_serializer_class(self):
+		if self.action in ['create', 'update']:
+			serializer_class = ArticleCreateSerializer
+		else:
+			serializer_class = ArticleSerialize
+		return serializer_class
 	def get_permissions(self):
 		if self.action in ['like', 'dislike', 'add_view']:
 			permission_classes = [EveryOne]

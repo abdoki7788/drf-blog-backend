@@ -19,7 +19,7 @@ class IPAddress(models.Model):
 
 class Article(models.Model):
 	title = models.CharField(max_length=250)
-	slug = models.SlugField(max_length=250, unique=True)
+	slug = models.SlugField(max_length=250, unique=True, allow_unicode=True)
 	image = models.ImageField(upload_to="images", null=True)
 	content = models.TextField()
 	author = models.ForeignKey(User, related_name='articles', on_delete=models.CASCADE)
