@@ -11,6 +11,12 @@ from blog.permissions import EveryOne
 
 class CustomUserViewSet(UserViewSet):
 	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
+	def followings(self, request, id):
+		obj = self.get_object()
+		res = CustomUserSerializer(obj.followings.all(), many=True)
+		return Response(res.data)
+
+	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
 	def followers(self, request, id):
 		obj = self.get_object()
 		res = CustomUserSerializer(obj.followers.all(), many=True)
