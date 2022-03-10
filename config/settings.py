@@ -44,12 +44,14 @@ INSTALLED_APPS = [
 	'drf_yasg',
 	'blog.apps.BlogConfig',
 	'users',
+	'corsheaders',
 ]
 
 MIDDLEWARE = [
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
@@ -159,3 +161,6 @@ EMAIL_HOST_USER = 'ad.kiany.2009@gmail.com'
 EMAIL_HOST_PASSWORD = 'abdolrahman'
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+ALLOWED_HOSTS = ['http://localhost:3000', 'http://localhost:8080', 'http://localhost:8000']
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://localhost:8080', 'http://localhost:8000')
