@@ -5,23 +5,30 @@ from rest_framework.decorators import action
 from djoser.views import UserViewSet
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CustomUserSerializer
+from blog.permissions import EveryOne
 
 # Create your views here.
 
 class CustomUserViewSet(UserViewSet):
+	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
+	def followers(self, request, id):
+		obj = self.get_object()
+		res = CustomUserSerializer(obj.followers.all(), many=True)
+		return Response(res.data)
+
 	@action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
 	def follow(self, request, id):
 		to_follow_user = self.get_object()
 		follower_user = request.user
 		to_follow_user.followers.add(follower_user)
-		return Response(CustomUserSerializer(to_follow_user.followers.all(), many=True).data)
+		return self.followers(request=request, id=id)
 	
 	@action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
 	def unfollow(self, request, id):
 		to_unfollow_user = self.get_object()
 		unfollower_user = request.user
 		to_unfollow_user.followers.remove(unfollower_user)
-		return Response(CustomUserSerializer(to_unfollow_user.followers.all(), many=True).data)
+		return self.followers(request=request, id=id)
 
 
 class UserActivationView(APIView):
