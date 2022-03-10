@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from .models import Article, Tag
+from users.serializers import AuthorSerializer
 from django.utils.text import slugify
 
 class ArticleSerialize(serializers.ModelSerializer):
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
+	author = AuthorSerializer()
 	class Meta:
 		model = Article
 		fields = '__all__'
