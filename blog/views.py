@@ -5,9 +5,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import filters
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django_filters.rest_framework import DjangoFilterBackend
 # Create your views here.
 
 class ArticlePagination(PageNumberPagination):
@@ -24,6 +26,9 @@ class ArticlePagination(PageNumberPagination):
 
 class ArticleViewSet(viewsets.ModelViewSet):
 	queryset = Article.objects.all()
+	filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+	search_fields = ['content', 'title']
+	ordering_fields = ['published', 'hits', 'likes']
 	filterset_fields = ['status', 'author__username', 'published', 'tags__slug', 'tags']
 	pagination_class = ArticlePagination
 	def get_serializer_class(self):
