@@ -10,6 +10,7 @@ from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django_filters.rest_framework import DjangoFilterBackend
+import datetime
 # Create your views here.
 
 class ArticlePagination(PageNumberPagination):
@@ -86,6 +87,12 @@ class ArticleViewSet(viewsets.ModelViewSet):
 				return Response(comment.data)
 			else:
 				return Response(comment.errors)
+	@action(methods=['get'], detail=False)
+	def week_trand(self, request):
+		week_start = datetime.datetime.now() - datetime.timedelta(days = 7)
+		now = datetime.datetime.now()
+		trand = Article.objects.filter(published__range=[week_start, now], status=True).order_by('-like', '-hits')[0]
+		return Response(ArticleSerialize(trand).data)
 
 
 class TagViewSets(viewsets.ModelViewSet):
