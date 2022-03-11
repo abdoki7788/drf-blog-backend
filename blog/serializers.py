@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, Tag
+from .models import Article, Tag, Comment
 from users.serializers import AuthorSerializer
 from django.utils.text import slugify
 
@@ -26,3 +26,10 @@ class TagSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Tag
 		fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+	author = AuthorSerializer(read_only=True)
+	class Meta:
+		model = Comment
+		fields = ('id', 'content', 'author')
+		read_only_fields = ('id', 'author', 'article')

@@ -34,3 +34,12 @@ class Article(models.Model):
 
 	def __str__(self):
 		return self.title
+
+
+class Comment(models.Model):
+	content = models.TextField()
+	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
+
+	def __str__(self):
+		return f"{self.content[:50]+'...' if len(self.content) > 50 else self.content[:50]}     ---      {self.article}"

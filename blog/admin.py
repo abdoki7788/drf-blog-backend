@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Article, Tag, IPAddress
+from .models import Article, Tag, IPAddress, Comment
 
 # Register your models here.
 
@@ -7,3 +7,4 @@ from .models import Article, Tag, IPAddress
 admin.site.register(Article)
 admin.site.register(Tag)
 admin.site.register(IPAddress)
+admin.site.register(Comment)

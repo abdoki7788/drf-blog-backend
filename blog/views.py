@@ -1,9 +1,10 @@
 from rest_framework import viewsets
 from .models import Article, Tag, IPAddress
-from .serializers import ArticleSerialize, TagSerializer, ArticleCreateSerializer
+from .serializers import ArticleSerialize, TagSerializer, ArticleCreateSerializer, CommentSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -34,6 +35,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	def get_permissions(self):
 		if self.action in ['like', 'dislike', 'add_view']:
 			permission_classes = [EveryOne]
+		elif self.action == 'comments':
+			permission_classes = [IsAuthenticatedOrReadOnly]
 		else:
 			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
 		return [permission() for permission in permission_classes]
@@ -63,6 +66,21 @@ class ArticleViewSet(viewsets.ModelViewSet):
 		if not obj.hits.filter(ip=req_ip):
 			obj.hits.add(ip_obj)
 		return Response({'hits':obj.hits.count()})
+	@action(methods=['get', 'post'], detail=True)
+	def comments(self, request, pk):
+		obj = self.get_object()
+		if request.method == 'GET':
+			comments = obj.comments.all()
+			serialized_comments = CommentSerializer(comments, many=True)
+			return Response(serialized_comments.data)
+		elif request.method == 'POST':
+			data = request.data
+			comment = CommentSerializer(data=data)
+			if comment.is_valid():
+				comment.save(author=request.user, article=obj)
+				return Response(comment.data)
+			else:
+				return Response(comment.errors)
 
 
 class TagViewSets(viewsets.ModelViewSet):
