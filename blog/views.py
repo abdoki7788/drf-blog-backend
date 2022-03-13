@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.views import APIView
 from rest_framework import filters
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
@@ -26,7 +27,7 @@ class ArticlePagination(PageNumberPagination):
 		})
 
 class ArticleViewSet(viewsets.ModelViewSet):
-	queryset = Article.objects.all()
+	queryset = Article.objects.filter(status=True)
 	filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
 	search_fields = ['content', 'title']
 	ordering_fields = ['published', 'hits', 'likes']
@@ -108,3 +109,10 @@ class TagViewSets(viewsets.ModelViewSet):
 		return HttpResponseRedirect(redirect_to=base_link)
 
 
+class ArticleShortLink(APIView):
+	def get(self, request, shortlink):
+		try:
+			obj = Article.objects.get(short_link=shortlink)
+			return HttpResponseRedirect(reverse('article-detail', kwargs={'pk': obj.id}))
+		except Article.DoesNotExist:
+			return Response('article not found', status=404)

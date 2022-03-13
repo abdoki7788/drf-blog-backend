@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
+from django.urls import reverse
+from django.utils.text import slugify
+import hashlib
 
 User = get_user_model()
 # Create your models here.
@@ -19,7 +23,7 @@ class IPAddress(models.Model):
 
 class Article(models.Model):
 	title = models.CharField(max_length=250)
-	slug = models.SlugField(max_length=250, unique=True, allow_unicode=True)
+	slug = models.SlugField(max_length=250, unique=True, allow_unicode=True, null=True, blank=True)
 	image = models.ImageField(upload_to="images", null=True)
 	content = models.TextField()
 	author = models.ForeignKey(User, related_name='articles', on_delete=models.CASCADE)
@@ -28,9 +32,23 @@ class Article(models.Model):
 	published = models.DateTimeField(auto_now=True)
 	status = models.BooleanField(default=True)
 	hits = models.ManyToManyField(IPAddress, blank=True)
+	short_link = models.CharField(max_length=12, null=True, blank=True)
+	
+	@property
+	def get_short_link(self):
+		link = hashlib.sha256()
+		link.update(self.slug.encode('utf-8'))
+		link = link.hexdigest()
+		return link[:10]
+	
+	
+	def full_short_link(self):
+		return 'http://' + Site.objects.get_current().domain + reverse('short-link', kwargs={'shortlink': self.short_link})
 
-	def date(self):
-		return self.published.date()
+	def save(self, *args, **kwargs):
+		self.slug = slugify(self.title, allow_unicode=True)
+		self.short_link = self.get_short_link
+		super(Article, self).save(*args, **kwargs)
 
 	def __str__(self):
 		return self.title

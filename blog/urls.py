@@ -1,9 +1,9 @@
 from django.urls import path
 from rest_framework import routers
-from .views import ArticleViewSet, TagViewSets
+from .views import ArticleViewSet, TagViewSets, ArticleShortLink
 
 urlpatterns = [
-	
+	path('a/<str:shortlink>/', ArticleShortLink.as_view(), name='short-link')
 ]
 
 

@@ -4,6 +4,7 @@ from users.serializers import AuthorSerializer
 from django.utils.text import slugify
 
 class ArticleSerialize(serializers.ModelSerializer):
+	full_short_link = serializers.CharField()
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
 	author = AuthorSerializer()
 	class Meta:
@@ -16,7 +17,6 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 		fields = ('title', 'content', 'status')
 	
 	def create(self, validated_data):
-		validated_data['slug'] = slugify(validated_data['title'], allow_unicode=True)
 		validated_data['author'] = self.context['request'].user
 		obj = Article.objects.create(**validated_data)
 		obj.save()
