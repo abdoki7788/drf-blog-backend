@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .models import Article, Tag, IPAddress
+from .models import Article, Tag, IPAddress, Comment
 from .serializers import ArticleSerialize, TagSerializer, ArticleCreateSerializer, CommentSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -116,3 +116,9 @@ class ArticleShortLink(APIView):
 			return HttpResponseRedirect(reverse('article-detail', kwargs={'pk': obj.id}))
 		except Article.DoesNotExist:
 			return Response('article not found', status=404)
+
+
+class CommentsViewSet(viewsets.ModelViewSet):
+	queryset = Comment.objects.all()
+	serializer_class = CommentSerializer
+	permission_classes = [IsAuthorOrSuperuserElseReadOnly]

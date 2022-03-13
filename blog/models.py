@@ -57,6 +57,8 @@ class Article(models.Model):
 class Comment(models.Model):
 	content = models.TextField()
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	created = models.DateTimeField(auto_now=True)
+	parent = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, related_name='children')
 	article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
 	def __str__(self):
