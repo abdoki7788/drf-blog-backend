@@ -7,6 +7,7 @@ class ArticleSerialize(serializers.ModelSerializer):
 	full_short_link = serializers.CharField()
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
 	author = AuthorSerializer()
+	formatted_date = serializers.JSONField()
 	class Meta:
 		model = Article
 		fields = '__all__'

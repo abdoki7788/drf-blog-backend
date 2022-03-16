@@ -45,6 +45,9 @@ class Article(models.Model):
 	def full_short_link(self):
 		return 'http://' + Site.objects.get_current().domain + reverse('short-link', kwargs={'shortlink': self.short_link})
 
+	def formatted_date(self):
+		return {"year":self.published.year, "month":self.published.month, "day":self.published.day, "hour":self.published.hour, "minute":self.published.minute}
+
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.title, allow_unicode=True)
 		self.short_link = self.get_short_link
@@ -62,7 +65,7 @@ class Comment(models.Model):
 	article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
 	def formatted_date(self):
-		return {"year":self.created.year, "month":self.created.month, "day":self.created.day, "hour":self.created.hour, "minute":self.created.minute, "second":self.created.second}
+		return {"year":self.created.year, "month":self.created.month, "day":self.created.day, "hour":self.created.hour, "minute":self.created.minute}
 
 	def __str__(self):
 		return f"{self.content[:50]+'...' if len(self.content) > 50 else self.content[:50]}     ---      {self.article}"
