@@ -121,4 +121,17 @@ class ArticleShortLink(APIView):
 class CommentsViewSet(viewsets.ModelViewSet):
 	queryset = Comment.objects.all()
 	serializer_class = CommentSerializer
-	permission_classes = [IsAuthorOrSuperuserElseReadOnly]
+	def get_permissions(self, request):
+		if request.action == 'create':
+			permission_classes = [IsAuthenticatedOrReadOnly]
+		else:
+			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
+		return [permission() for permission in permission_classes]
+	def create(self, request, *args, **kwargs):
+		data = request.data
+		comment = CommentSerializer(data=data)
+		if comment.is_valid():
+			comment.save(author=request.user)
+			return Response(comment.data)
+		else:
+			return Response(comment.errors)
