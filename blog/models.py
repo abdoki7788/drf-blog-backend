@@ -61,5 +61,8 @@ class Comment(models.Model):
 	parent = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, related_name='children')
 	article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
+	def formatted_date(self):
+		return {"year":self.created.year, "month":self.created.month, "day":self.created.day, "hour":self.created.hour, "minute":self.created.minute, "second":self.created.second}
+
 	def __str__(self):
 		return f"{self.content[:50]+'...' if len(self.content) > 50 else self.content[:50]}     ---      {self.article}"

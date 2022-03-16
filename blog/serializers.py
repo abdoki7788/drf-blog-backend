@@ -31,7 +31,7 @@ class CommentSerializer(serializers.ModelSerializer):
 	author = AuthorSerializer(read_only=True)
 	class Meta:
 		model = Comment
-		fields = ('id', 'content', 'author', 'article', 'parent', 'children', 'created')
+		fields = ('id', 'content', 'author', 'article', 'parent', 'children', 'created', 'formatted_date')
 		read_only_fields = ('id', 'author', 'article', 'children')
 	def get_fields(self, *args, **kwargs):
 		fields = super(CommentSerializer, self).get_fields(*args, **kwargs)
