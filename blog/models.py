@@ -22,7 +22,7 @@ class IPAddress(models.Model):
 		return self.ip
 
 class Article(models.Model):
-	title = models.CharField(max_length=250)
+	title = models.CharField(max_length=250, unique=True)
 	slug = models.SlugField(max_length=250, unique=True, allow_unicode=True, null=True, blank=True)
 	image = models.ImageField(upload_to="images", null=True)
 	content = models.TextField()
