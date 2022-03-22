@@ -2,10 +2,13 @@ import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from djoser.views import UserViewSet
 from rest_framework.permissions import IsAuthenticated
-from .serializers import CustomUserSerializer
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.mixins import ListModelMixin
+from djoser.views import UserViewSet
+from .serializers import AuthorSerializer, CustomUserSerializer
 from blog.permissions import EveryOne
+from .models import CustomUser as User
 
 # Create your views here.
 
@@ -46,3 +49,12 @@ class UserActivationView(APIView):
 		post_data = {'uid': uid, 'token': token}
 		result = requests.post(post_url, data = post_data)
 		return Response(data=result.content, status=result.status_code)
+
+
+
+
+
+class AuthorView(RetrieveAPIView):
+	queryset = User.objects.filter(is_active=True)
+	serializer_class = AuthorSerializer
+	lookup_field = 'username'
