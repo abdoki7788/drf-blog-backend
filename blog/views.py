@@ -90,10 +90,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
 				return Response(comment.errors)
 	@action(methods=['get'], detail=False)
 	def week_trand(self, request):
-		week_start = datetime.datetime.now() - datetime.timedelta(days = 7)
 		now = datetime.datetime.now()
-		trand = Article.objects.filter(published__range=[week_start, now], status=True).order_by('-like', '-hits')[0]
-		return Response(ArticleSerialize(trand).data)
+		week_start = now - datetime.timedelta(days = 7)
+		trand = Article.objects.filter(published__range=[week_start, now], status=True).order_by('-like', '-hits')
+		if trand:
+			return Response(ArticleSerialize(trand[0]).data)
+		else:
+			return Response({'detail': 'no articles made in the last week'}, status=404)
 
 
 class TagViewSets(viewsets.ModelViewSet):
