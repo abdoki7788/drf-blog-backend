@@ -15,8 +15,8 @@ class Tag(models.Model):
 	def __str__(self):
 		return self.name
 	def save(self, *args, **kwargs):
-		self.slug = slugify(self.title, allow_unicode=True)
-		return super(self, Tag).save(args, kwargs)
+		self.slug = slugify(self.name, allow_unicode=True)
+		return super(Tag, self).save(args, kwargs)
 
 class IPAddress(models.Model):
 	ip =  models.GenericIPAddressField(unique=True)
