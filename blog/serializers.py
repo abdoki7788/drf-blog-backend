@@ -3,9 +3,15 @@ from .models import Article, Tag, Comment
 from users.serializers import AuthorSerializer
 from django.utils.text import slugify
 
+class TagSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Tag
+		fields = '__all__'
+
 class ArticleSerialize(serializers.ModelSerializer):
 	full_short_link = serializers.CharField()
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
+	tags = TagSerializer(many=True)
 	author = AuthorSerializer()
 	formatted_date = serializers.JSONField()
 	class Meta:
@@ -23,10 +29,6 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 		obj.save()
 		return obj
 
-class TagSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Tag
-		fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
 	author = AuthorSerializer(read_only=True)

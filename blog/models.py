@@ -11,9 +11,12 @@ User = get_user_model()
 
 class Tag(models.Model):
 	name = models.CharField(max_length=50, unique=True)
-	slug = models.SlugField(unique=True)
+	slug = models.SlugField(unique=True, null=True, blank=True)
 	def __str__(self):
 		return self.name
+	def save(self, *args, **kwargs):
+		self.slug = slugify(self.title, allow_unicode=True)
+		return super(self, Tag).save(args, kwargs)
 
 class IPAddress(models.Model):
 	ip =  models.GenericIPAddressField(unique=True)
