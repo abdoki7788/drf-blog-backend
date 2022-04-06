@@ -23,6 +23,7 @@ class ArticlePagination(PageNumberPagination):
 			'previous': self.get_previous_link(),
 			'count': self.page.paginator.count,
 			'total_pages': self.page.paginator.num_pages,
+			'active_page': self.page.number,
 			'results': data
 		})
 
