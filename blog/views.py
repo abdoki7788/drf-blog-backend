@@ -21,7 +21,6 @@ class ArticlePagination(PageNumberPagination):
 		return Response({
 			'next': self.get_next_link(),
 			'previous': self.get_previous_link(),
-			'count': self.page.paginator.count,
 			'total_pages': self.page.paginator.num_pages,
 			'active_page': self.page.number,
 			'results': data
