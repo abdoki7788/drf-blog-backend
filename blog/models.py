@@ -64,7 +64,7 @@ class Comment(models.Model):
 	content = models.TextField()
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	created = models.DateTimeField(auto_now=True)
-	parent = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, related_name='children')
+	parent = models.ForeignKey('Comment', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
 	article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
 	def formatted_date(self):
