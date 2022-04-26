@@ -16,12 +16,12 @@ class ArticleSerialize(serializers.ModelSerializer):
 	formatted_date = serializers.JSONField()
 	class Meta:
 		model = Article
-		fields = '__all__'
+		exclude = ('short_link', 'published')
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Article
-		fields = ('title', 'content', 'status', 'image')
+		fields = ('title', 'content', 'status', 'image', 'tags')
 	
 	def create(self, validated_data):
 		validated_data['author'] = self.context['request'].user
