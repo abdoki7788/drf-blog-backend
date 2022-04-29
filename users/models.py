@@ -19,7 +19,7 @@ class Socials(models.Model):
 
 class CustomUser(AbstractUser):
 	email = models.EmailField(_("email address"), blank=False, null=False, unique=True)
-	profile = models.ImageField(default='images/logo.png', null=True)
+	profile = models.ImageField(null=True, blank=True)
 	followers = models.ManyToManyField("CustomUser", blank=True, related_name='followings')
 	about = models.TextField(max_length=2000, blank=True)
 	socials = models.OneToOneField(Socials, null=True, on_delete=models.SET_NULL, related_name='user', blank=True)
