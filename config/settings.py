@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4mv+%3g=k@$4(4899!)=wgi6!-n6tt8et(rnn^beh%k#x7s1)5'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -152,14 +153,22 @@ DJOSER = {
 		'current_user': 'users.serializers.CustomUserSerializer',
 		'user': 'users.serializers.CustomUserSerializer',
 	},
+	'EMAIL': {
+		'activation': 'users.views.ActivationEmail',
+		'confirmation': 'djoser.email.ConfirmationEmail',
+		'password_reset': 'djoser.email.PasswordResetEmail',
+		'password_changed_confirmation': 'djoser.email.PasswordChangedConfirmationEmail',
+		'username_changed_confirmation': 'djoser.email.UsernameChangedConfirmationEmail',
+		'username_reset': 'djoser.email.UsernameResetEmail',
+	}
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'ad.kiany.2009@gmail.com'
-EMAIL_HOST_PASSWORD = 'abdolrahman'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 AUTH_USER_MODEL = 'users.CustomUser'
 

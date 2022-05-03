@@ -9,8 +9,12 @@ from djoser.views import UserViewSet
 from .serializers import AuthorSerializer, CustomUserSerializer
 from blog.permissions import EveryOne
 from .models import CustomUser as User
+from djoser import email
 
 # Create your views here.
+
+class ActivationEmail(email.ActivationEmail):
+    template_name = 'email/activation.html'
 
 class CustomUserViewSet(UserViewSet):
 	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
