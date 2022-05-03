@@ -14,7 +14,7 @@ from djoser import email
 # Create your views here.
 
 class ActivationEmail(email.ActivationEmail):
-    template_name = 'email/activation.html'
+    template_name = 'email/activations.html'
 
 class CustomUserViewSet(UserViewSet):
 	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
