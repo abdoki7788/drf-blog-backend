@@ -30,6 +30,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	queryset = Article.objects.filter(status=True)
 	filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
 	search_fields = ['content', 'title']
+	lookup_field = 'slug'
 	ordering_fields = ['published', 'hits', 'likes']
 	filterset_fields = ['status', 'author__username', 'published', 'tags__slug', 'tags']
 	pagination_class = ArticlePagination
