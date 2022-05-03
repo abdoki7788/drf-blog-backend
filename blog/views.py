@@ -49,18 +49,18 @@ class ArticleViewSet(viewsets.ModelViewSet):
 			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
 		return [permission() for permission in permission_classes]
 	@action(methods=['post'], detail=True)
-	def like(self,request,pk):
+	def like(self,request,slug):
 		article = self.get_object()
 		article.like += 1
 		article.save()
-		return Response(Article.objects.get(id=pk).like)
+		return Response(Article.objects.get(id=slug).like)
 	
 	@action(methods=['post'], detail=True)
-	def dislike(self,request,pk):
+	def dislike(self,request,slug):
 		article = self.get_object()
 		article.like -= 1
 		article.save()
-		return Response(Article.objects.get(id=pk).like)
+		return Response(Article.objects.get(id=slug).like)
 	
 	@action(methods=['post'], detail=True)
 	def add_view(self, request, *args, **kwargs):
@@ -75,7 +75,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 			obj.hits.add(ip_obj)
 		return Response({'hits':obj.hits.count()})
 	@action(methods=['get', 'post'], detail=True)
-	def comments(self, request, pk):
+	def comments(self, request, slug):
 		obj = self.get_object()
 		if request.method == 'GET':
 			comments = obj.comments.all()
@@ -117,7 +117,7 @@ class ArticleShortLink(APIView):
 	def get(self, request, shortlink):
 		try:
 			obj = Article.objects.get(short_link=shortlink)
-			return HttpResponseRedirect(reverse('article-detail', kwargs={'pk': obj.id}))
+			return HttpResponseRedirect(reverse('article-detail', kwargs={'slug': obj.slug}))
 		except Article.DoesNotExist:
 			return Response('article not found', status=404)
 
