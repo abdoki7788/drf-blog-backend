@@ -21,7 +21,7 @@ class ArticleSerialize(serializers.ModelSerializer):
 class ArticleCreateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Article
-		fields = ('title', 'content', 'status', 'image', 'tags')
+		fields = ('title', 'content', 'status', 'image', )
 	
 	def create(self, validated_data):
 		validated_data['author'] = self.context['request'].user
