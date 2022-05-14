@@ -102,6 +102,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
 class TagViewSets(viewsets.ModelViewSet):
 	queryset = Tag.objects.all()
+	lookup_field = 'slug'
 	serializer_class = TagSerializer
 	@action(methods=['get'], detail=True)
 	def articles(self, request, pk):
