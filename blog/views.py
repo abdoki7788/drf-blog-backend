@@ -32,7 +32,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	search_fields = ['content', 'title']
 	lookup_field = 'slug'
 	ordering_fields = ['published', 'hits', 'likes']
-	filterset_fields = ['status', 'author__username', 'published', 'tags__slug', 'tags']
+	filterset_fields = ['status', 'author__username', 'published', 'tags__name', 'tags']
 	pagination_class = ArticlePagination
 	def get_serializer_class(self):
 		if self.action in ['create', 'update']:
@@ -102,7 +102,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
 class TagViewSets(viewsets.ModelViewSet):
 	queryset = Tag.objects.all()
-	lookup_field = 'slug'
+	lookup_field = 'name'
 	serializer_class = TagSerializer
 	@action(methods=['get'], detail=True)
 	def articles(self, request, pk):

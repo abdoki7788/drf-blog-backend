@@ -19,15 +19,14 @@ class ArticleSerialize(serializers.ModelSerializer):
 		exclude = ('short_link', 'published')
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
+	tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
 	class Meta:
 		model = Article
-		fields = ('title', 'content', 'status', 'image', )
+		fields = ('title', 'content', 'status', 'image', 'tags')
 	
 	def create(self, validated_data):
 		validated_data['author'] = self.context['request'].user
-		obj = Article.objects.create(**validated_data)
-		obj.save()
-		return obj
+		return super(ArticleCreateSerializer, self).create(validated_data)
 
 
 class CommentSerializer(serializers.ModelSerializer):
