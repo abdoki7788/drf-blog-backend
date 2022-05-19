@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Article, Tag, Comment
 from users.serializers import AuthorSerializer
-from django.utils.text import slugify
 
 class TagSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -19,7 +18,7 @@ class ArticleSerialize(serializers.ModelSerializer):
 		exclude = ('short_link', 'published')
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
-	tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
+	tags = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='name', many=True)
 	class Meta:
 		model = Article
 		fields = ('title', 'content', 'status', 'image', 'tags')
