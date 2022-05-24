@@ -31,7 +31,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
 	search_fields = ['content', 'title']
 	lookup_field = 'slug'
-	ordering_fields = ['published', 'hits', 'likes']
+	ordering_fields = ['published', 'hits', 'like']
 	filterset_fields = ['status', 'author__username', 'published', 'tags__name', 'tags']
 	pagination_class = ArticlePagination
 	def get_serializer_class(self):
