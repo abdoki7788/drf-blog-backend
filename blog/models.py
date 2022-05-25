@@ -4,6 +4,8 @@ from django.contrib.sites.models import Site
 from django.urls import reverse
 from django.utils.text import slugify
 import hashlib
+import random
+import string
 
 User = get_user_model()
 # Create your models here.
@@ -21,7 +23,7 @@ class IPAddress(models.Model):
 		return self.ip
 
 class Article(models.Model):
-	title = models.CharField(max_length=250, unique=True)
+	title = models.CharField(max_length=250)
 	slug = models.SlugField(max_length=250, unique=True, allow_unicode=True, null=True, blank=True)
 	image = models.ImageField(upload_to="images", null=True)
 	content = models.TextField()
@@ -48,7 +50,7 @@ class Article(models.Model):
 		return {"year":self.published.year, "month":self.published.month, "day":self.published.day, "hour":self.published.hour, "minute":self.published.minute}
 
 	def save(self, *args, **kwargs):
-		self.slug = slugify(self.title, allow_unicode=True)
+		self.slug = slugify(self.title, allow_unicode=True) + '-' + ( ''.join(random.choice(string.ascii_letters) for i in range(10)) )
 		self.short_link = self.get_short_link
 		super(Article, self).save(*args, **kwargs)
 

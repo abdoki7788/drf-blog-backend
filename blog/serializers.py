@@ -18,7 +18,7 @@ class ArticleSerialize(serializers.ModelSerializer):
 		exclude = ('short_link', 'published')
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
-	tags = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='name', many=True)
+	tags = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='name', many=True, required=False)
 	class Meta:
 		model = Article
 		fields = ('title', 'content', 'status', 'image', 'tags')
