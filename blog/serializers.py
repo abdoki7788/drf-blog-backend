@@ -21,7 +21,8 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 	tags = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='name', many=True, required=False)
 	class Meta:
 		model = Article
-		fields = ('title', 'content', 'status', 'image', 'tags')
+		fields = ('title', 'content', 'status', 'image', 'tags', 'slug')
+		read_only_fields = ('slug',)
 	
 	def create(self, validated_data):
 		validated_data['author'] = self.context['request'].user
