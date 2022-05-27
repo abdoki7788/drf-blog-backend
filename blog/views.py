@@ -53,14 +53,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
 		article = self.get_object()
 		article.like += 1
 		article.save()
-		return Response(Article.objects.get(id=slug).like)
+		return Response(article.like)
 	
 	@action(methods=['post'], detail=True)
 	def dislike(self,request,slug):
 		article = self.get_object()
 		article.like -= 1
 		article.save()
-		return Response(Article.objects.get(id=slug).like)
+		return Response(article.like)
 	
 	@action(methods=['post'], detail=True)
 	def add_view(self, request, *args, **kwargs):
@@ -78,7 +78,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	def comments(self, request, slug):
 		obj = self.get_object()
 		if request.method == 'GET':
-			comments = obj.comments.all()
+			comments = obj.comments.filter(parent=None)
 			serialized_comments = CommentSerializer(comments, many=True)
 			return Response(serialized_comments.data)
 		elif request.method == 'POST':

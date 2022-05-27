@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Article, Tag, Comment
-from users.serializers import AuthorSerializer
+from users.serializers import ArticleAuthorSerializer
 
 class TagSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -11,11 +11,10 @@ class ArticleSerialize(serializers.ModelSerializer):
 	full_short_link = serializers.CharField()
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
 	tags = TagSerializer(many=True)
-	author = AuthorSerializer()
-	formatted_date = serializers.JSONField()
+	author = ArticleAuthorSerializer()
 	class Meta:
 		model = Article
-		exclude = ('short_link', 'published')
+		exclude = ('short_link', )
 
 class ArticleCreateSerializer(serializers.ModelSerializer):
 	tags = serializers.SlugRelatedField(queryset=Tag.objects.all(), slug_field='name', many=True, required=False)
@@ -30,12 +29,12 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-	author = AuthorSerializer(read_only=True)
+	author = ArticleAuthorSerializer(read_only=True)
+	children = serializers.SerializerMethodField()
 	class Meta:
 		model = Comment
-		fields = ('id', 'content', 'author', 'article', 'parent', 'children', 'created', 'formatted_date')
-		read_only_fields = ('id', 'author', 'article', 'children')
-	def get_fields(self, *args, **kwargs):
-		fields = super(CommentSerializer, self).get_fields(*args, **kwargs)
-		fields['children'] = CommentSerializer(many=True, read_only=True)
-		return fields
+		fields = ('id', 'content', 'author', 'article', 'parent', 'children', 'created')
+		read_only_fields = ('id', 'author', 'article', 'children', 'created')
+	
+	def get_children(self, obj):
+		return CommentSerializer(obj.children.all(), many=True).data
