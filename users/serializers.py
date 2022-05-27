@@ -20,3 +20,12 @@ class CustomUserSerializer(UserSerializer):
 class AuthorSerializer(CustomUserSerializer):
 	class Meta(CustomUserSerializer.Meta):
 		fields = ('username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials')
+
+class ArticleAuthorSerializer(AuthorSerializer):
+	class Meta(AuthorSerializer.Meta):
+		fields = ('username', 'get_full_name', 'profile', 'about', 'socials')
+
+
+class CommentAuthorSerializer(AuthorSerializer):
+	class Meta(AuthorSerializer.Meta):
+		fields = ('username', 'get_full_name', 'profile')
