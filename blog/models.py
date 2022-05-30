@@ -30,7 +30,7 @@ class Article(models.Model):
 	author = models.ForeignKey(User, related_name='articles', on_delete=models.CASCADE)
 	tags = models.ManyToManyField(Tag, blank=True, related_name='articles')
 	like = models.IntegerField(default=0)
-	published = models.DateTimeField(null=True, blank=True)
+	published = models.DateTimeField(null=True, blank=True, default=timezone.now)
 	status = models.BooleanField(default=True)
 	hits = models.ManyToManyField(IPAddress, blank=True)
 	short_link = models.CharField(max_length=12, null=True, blank=True)
@@ -47,8 +47,6 @@ class Article(models.Model):
 		return 'http://' + Site.objects.get_current().domain + reverse('short-link', kwargs={'shortlink': self.short_link})
 
 	def save(self, *args, **kwargs):
-		if not self.published:
-			self.published = timezone.now()
 		if not Article.objects.filter(~Q(id=self.id), title=self.title).exists():
 			self.slug = slugify(self.title, allow_unicode=True)
 		else:
