@@ -10,7 +10,7 @@ from rest_framework import filters
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
 import datetime
 # Create your views here.
 
@@ -19,20 +19,23 @@ class ArticlePagination(PageNumberPagination):
 	page_size_query_param = 'page_size'
 	def get_paginated_response(self, data):
 		return Response({
-			'next': self.get_next_link(),
-			'previous': self.get_previous_link(),
 			'total_pages': self.page.paginator.num_pages,
-			'active_page': self.page.number,
 			'results': data
 		})
 
+class ArticleFilterSet(rest_framework.FilterSet):
+	published = rest_framework.DateFilter(field_name='published', lookup_expr='date')
+	class Meta:
+		model = Article
+		fields = ['status', 'author__username', 'published', 'tags__name', 'tags']
+
 class ArticleViewSet(viewsets.ModelViewSet):
 	queryset = Article.objects.filter(status=True)
-	filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+	filter_backends = [filters.SearchFilter, filters.OrderingFilter, rest_framework.DjangoFilterBackend]
 	search_fields = ['content', 'title']
 	lookup_field = 'slug'
 	ordering_fields = ['published', 'hits', 'like']
-	filterset_fields = ['status', 'author__username', 'published', 'tags__name', 'tags']
+	filter_class = ArticleFilterSet
 	pagination_class = ArticlePagination
 	def get_serializer_class(self):
 		if self.action in ['create', 'update']:
