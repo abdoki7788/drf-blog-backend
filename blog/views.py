@@ -101,6 +101,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
 			return Response(ArticleSerialize(trand[0]).data)
 		else:
 			return Response({'detail': 'no articles made in the last week'}, status=404)
+	@action(methods=['get'], detail=True)
+	def isliked(self, request, slug):
+		article = self.get_object()
+		if request.user in article.like.all():
+			return Response(True)
+		else:
+			return Response(False)
 
 
 class TagViewSets(viewsets.ModelViewSet):
