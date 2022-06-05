@@ -29,7 +29,7 @@ class Article(models.Model):
 	content = models.TextField()
 	author = models.ForeignKey(User, related_name='articles', on_delete=models.CASCADE)
 	tags = models.ManyToManyField(Tag, blank=True, related_name='articles')
-	like = models.IntegerField(default=0)
+	like = models.ManyToManyField(User, blank=True, related_name='liked_articles')
 	published = models.DateTimeField(null=True, blank=True, default=timezone.now)
 	status = models.BooleanField(default=True)
 	hits = models.ManyToManyField(IPAddress, blank=True)

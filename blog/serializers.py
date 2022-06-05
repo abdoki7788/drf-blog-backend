@@ -10,6 +10,7 @@ class TagSerializer(serializers.ModelSerializer):
 class ArticleSerialize(serializers.ModelSerializer):
 	full_short_link = serializers.CharField()
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
+	like = serializers.IntegerField(source='like.count', read_only=True)
 	tags = TagSerializer(many=True)
 	author = ArticleAuthorSerializer()
 	class Meta:

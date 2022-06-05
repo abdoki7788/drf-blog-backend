@@ -44,9 +44,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
 			serializer_class = ArticleSerialize
 		return serializer_class
 	def get_permissions(self):
-		if self.action in ['like', 'dislike', 'add_view']:
+		if self.action == 'add_view':
 			permission_classes = [EveryOne]
-		elif self.action == 'comments':
+		elif self.action in ['comments','like', 'dislike']:
 			permission_classes = [IsAuthenticatedOrReadOnly]
 		else:
 			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
@@ -54,16 +54,16 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	@action(methods=['post'], detail=True)
 	def like(self,request,slug):
 		article = self.get_object()
-		article.like += 1
+		article.like.add(request.user)
 		article.save()
-		return Response(article.like)
+		return Response(article.like.count())
 	
 	@action(methods=['post'], detail=True)
 	def dislike(self,request,slug):
 		article = self.get_object()
-		article.like -= 1
+		article.like.remove(request.user)
 		article.save()
-		return Response(article.like)
+		return Response(article.like.count())
 	
 	@action(methods=['post'], detail=True)
 	def add_view(self, request, *args, **kwargs):
