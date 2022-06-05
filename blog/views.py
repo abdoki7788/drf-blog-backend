@@ -4,7 +4,7 @@ from .serializers import ArticleSerialize, TagSerializer, ArticleCreateSerialize
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework import filters
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
@@ -48,6 +48,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
 			permission_classes = [EveryOne]
 		elif self.action in ['comments','like', 'dislike']:
 			permission_classes = [IsAuthenticatedOrReadOnly]
+		elif self.action == 'isliked':
+			permission_classes = [IsAuthenticated]
 		else:
 			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
 		return [permission() for permission in permission_classes]
