@@ -2,7 +2,7 @@ from djoser.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from users.models import Socials
-
+from blog.ArticleSerializerForAuthor import ArticleSerializerForAuthor
 User = get_user_model()
 
 class SocialsSerializer(serializers.ModelSerializer):
@@ -18,8 +18,9 @@ class CustomUserSerializer(UserSerializer):
 
 
 class AuthorSerializer(CustomUserSerializer):
+	saved_articles = ArticleSerializerForAuthor(many=True)
 	class Meta(CustomUserSerializer.Meta):
-		fields = ('username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials')
+		fields = ('username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials', 'saved_articles')
 
 class ArticleAuthorSerializer(AuthorSerializer):
 	class Meta(AuthorSerializer.Meta):
