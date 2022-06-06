@@ -48,7 +48,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 			permission_classes = [EveryOne]
 		elif self.action in ['comments','like', 'dislike']:
 			permission_classes = [IsAuthenticatedOrReadOnly]
-		elif self.action == 'isliked':
+		elif self.action in ['isliked', 'issaved']:
 			permission_classes = [IsAuthenticated]
 		else:
 			permission_classes = [IsAuthorOrSuperuserElseReadOnly]
@@ -66,6 +66,20 @@ class ArticleViewSet(viewsets.ModelViewSet):
 		article.like.remove(request.user)
 		article.save()
 		return Response(article.like.count())
+
+	@action(methods=['post'], detail=True)
+	def save(self,request,slug):
+		article = self.get_object()
+		article.saves.add(request.user)
+		article.save()
+		return Response(article.saves.count())
+	
+	@action(methods=['post'], detail=True)
+	def unsave(self,request,slug):
+		article = self.get_object()
+		article.saves.remove(request.user)
+		article.save()
+		return Response(article.saves.count())
 	
 	@action(methods=['post'], detail=True)
 	def add_view(self, request, *args, **kwargs):
@@ -107,6 +121,13 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	def isliked(self, request, slug):
 		article = self.get_object()
 		if request.user in article.like.all():
+			return Response(True)
+		else:
+			return Response(False)
+	@action(methods=['get'], detail=True)
+	def issaved(self, request, slug):
+		article = self.get_object()
+		if request.user in article.saves.all():
 			return Response(True)
 		else:
 			return Response(False)
