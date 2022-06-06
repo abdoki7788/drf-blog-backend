@@ -13,7 +13,7 @@ class ArticleSerialize(serializers.ModelSerializer):
 	like = serializers.IntegerField(source='like.count', read_only=True)
 	saves = serializers.IntegerField(source='saves.count', read_only=True)
 	readtime = serializers.IntegerField(read_only=True)
-	tags = TagSerializer(many=True)
+	tags = serializers.SlugRelatedField(slug_field='name', read_only=True, many=True)
 	author = ArticleAuthorSerializer()
 	class Meta:
 		model = Article
