@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.db.models import Q
 import hashlib
+import readtime
 from django.utils import timezone
 
 User = get_user_model()
@@ -55,6 +56,10 @@ class Article(models.Model):
 			print('Exist', self.published, str(self.published))
 		self.short_link = self.get_short_link
 		super(Article, self).save(*args, **kwargs)
+	
+	@property
+	def readtime(self):
+		return readtime.of_markdown(self.content).minutes
 
 	def __str__(self):
 		return self.title

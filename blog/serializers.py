@@ -12,6 +12,7 @@ class ArticleSerialize(serializers.ModelSerializer):
 	hits = serializers.IntegerField(source='hits.count', read_only=True)
 	like = serializers.IntegerField(source='like.count', read_only=True)
 	saves = serializers.IntegerField(source='saves.count', read_only=True)
+	readtime = serializers.IntegerField(read_only=True)
 	tags = TagSerializer(many=True)
 	author = ArticleAuthorSerializer()
 	class Meta:
