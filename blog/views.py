@@ -10,6 +10,7 @@ from rest_framework import filters
 from .permissions import IsAuthorOrSuperuserElseReadOnly, EveryOne
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Q
 from django_filters import rest_framework
 import datetime
 # Create your views here.
@@ -30,13 +31,19 @@ class ArticleFilterSet(rest_framework.FilterSet):
 		fields = ['status', 'author__username', 'published', 'tags__name', 'tags']
 
 class ArticleViewSet(viewsets.ModelViewSet):
-	queryset = Article.objects.filter(status=True)
 	filter_backends = [filters.SearchFilter, filters.OrderingFilter, rest_framework.DjangoFilterBackend]
 	search_fields = ['content', 'title']
 	lookup_field = 'slug'
 	ordering_fields = ['published', 'hits', 'like']
 	filter_class = ArticleFilterSet
 	pagination_class = ArticlePagination
+	def get_queryset(self):
+		if self.request.user and self.request.user.is_authenticated:
+			return Article.objects.filter(Q(status=True) | Q(author=self.request.user))
+		else:
+			return Article.objects.filter(status=True)
+	
+
 	def get_serializer_class(self):
 		if self.action in ['create', 'update']:
 			serializer_class = ArticleCreateSerializer

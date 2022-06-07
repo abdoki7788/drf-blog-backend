@@ -8,7 +8,7 @@ urlpatterns = [
 
 
 router = routers.SimpleRouter()
-router.register(r'articles', ArticleViewSet)
+router.register(r'articles', ArticleViewSet, basename='articles')
 router.register(r'tags', TagViewSets)
 router.register(r'comments', CommentsViewSet)
 urlpatterns += router.urls
