@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.mixins import ListModelMixin
 from djoser.views import UserViewSet
-from .serializers import AuthorSerializer, CustomUserSerializer
+from .serializers import AuthorSerializer, CustomUserSerializer, FollowerOrFollowingSerializer
 from blog.permissions import EveryOne
 from .models import CustomUser as User
 from djoser import email
@@ -20,13 +20,13 @@ class CustomUserViewSet(UserViewSet):
 	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
 	def followings(self, request, id):
 		obj = self.get_object()
-		res = CustomUserSerializer(obj.followings.all(), many=True)
+		res = FollowerOrFollowingSerializer(obj.followings.all(), many=True)
 		return Response(res.data)
 
 	@action(methods=['get'], detail=True, permission_classes=[EveryOne])
 	def followers(self, request, id):
 		obj = self.get_object()
-		res = CustomUserSerializer(obj.followers.all(), many=True)
+		res = FollowerOrFollowingSerializer(obj.followers.all(), many=True)
 		return Response(res.data)
 
 	@action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
