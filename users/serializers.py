@@ -10,8 +10,15 @@ class SocialsSerializer(serializers.ModelSerializer):
 		model = Socials
 		fields = ['telegram', 'linkedin', 'instagram', 'github', 'website'] 
 
+class FollowerOrFollowingSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ('id', 'username', 'email', 'profile')
+
 class CustomUserSerializer(UserSerializer):
 	socials = SocialsSerializer()
+	followers = FollowerOrFollowingSerializer(many=True)
+	followings = FollowerOrFollowingSerializer(many=True)
 	class Meta(UserSerializer.Meta):
 		fields = ('id', 'username', 'email', 'first_name', 'last_name', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials')
 
