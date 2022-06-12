@@ -13,7 +13,7 @@ class SocialsSerializer(serializers.ModelSerializer):
 class FollowerOrFollowingSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ('id', 'username', 'email', 'profile')
+		fields = ('id', 'username', 'get_full_name', 'profile')
 
 class CustomUserSerializer(UserSerializer):
 	socials = SocialsSerializer()
@@ -27,13 +27,13 @@ class CustomUserSerializer(UserSerializer):
 class AuthorSerializer(CustomUserSerializer):
 	saved_articles = ArticleSerializerForAuthor(many=True)
 	class Meta(CustomUserSerializer.Meta):
-		fields = ('username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials', 'saved_articles')
+		fields = ('id', 'username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials', 'saved_articles')
 
 class ArticleAuthorSerializer(AuthorSerializer):
 	class Meta(AuthorSerializer.Meta):
-		fields = ('username', 'get_full_name', 'profile', 'about', 'socials')
+		fields = ('id', 'username', 'get_full_name', 'profile', 'about', 'socials')
 
 
 class CommentAuthorSerializer(AuthorSerializer):
 	class Meta(AuthorSerializer.Meta):
-		fields = ('username', 'get_full_name', 'profile')
+		fields = ('id', 'username', 'get_full_name', 'profile')
