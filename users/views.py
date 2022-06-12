@@ -42,6 +42,13 @@ class CustomUserViewSet(UserViewSet):
 		unfollower_user = request.user
 		to_unfollow_user.followers.remove(unfollower_user)
 		return self.followers(request=request, id=id)
+	@action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+	def isfollowed(self, request, id):
+		to_check_user = self.get_object()
+		checker_user = request.user
+		if checker_user in to_check_user.followers.all():
+			return Response(True)
+		return Response(False)
 
 
 class UserActivationView(APIView):
