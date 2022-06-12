@@ -29,14 +29,14 @@ class CustomUserViewSet(UserViewSet):
 		res = FollowerOrFollowingSerializer(obj.followers.all(), many=True)
 		return Response(res.data)
 
-	@action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+	@action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
 	def follow(self, request, id):
 		to_follow_user = self.get_object()
 		follower_user = request.user
 		to_follow_user.followers.add(follower_user)
 		return self.followers(request=request, id=id)
 	
-	@action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+	@action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
 	def unfollow(self, request, id):
 		to_unfollow_user = self.get_object()
 		unfollower_user = request.user
