@@ -19,15 +19,15 @@ class CustomUserSerializer(UserSerializer):
 	socials = SocialsSerializer()
 	followers = FollowerOrFollowingSerializer(many=True)
 	followings = FollowerOrFollowingSerializer(many=True)
+	saved_articles = ArticleSerializerForAuthor(many=True)
 	class Meta(UserSerializer.Meta):
-		fields = ('id', 'username', 'email', 'first_name', 'last_name', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials')
+		fields = ('id', 'username', 'email', 'first_name', 'last_name', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials', 'saved_articles')
 
 
 
 class AuthorSerializer(CustomUserSerializer):
-	saved_articles = ArticleSerializerForAuthor(many=True)
 	class Meta(CustomUserSerializer.Meta):
-		fields = ('id', 'username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials', 'saved_articles')
+		fields = ('id', 'username', 'email', 'get_full_name', 'profile', 'followers', 'followings', 'about', 'socials')
 
 class ArticleAuthorSerializer(AuthorSerializer):
 	class Meta(AuthorSerializer.Meta):
