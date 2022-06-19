@@ -41,9 +41,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
 	pagination_class = ArticlePagination
 	def get_queryset(self):
 		if self.request.user and self.request.user.is_authenticated:
-			return Article.objects.filter(Q(status=True) | Q(author=self.request.user))
+			return Article.objects.filter(Q(status=True) | Q(author=self.request.user)).order_by('-published')
 		else:
-			return Article.objects.filter(status=True)
+			return Article.objects.filter(status=True).order_by('-published')
 	
 
 	def get_serializer_class(self):
